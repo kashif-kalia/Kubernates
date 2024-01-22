@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sonarqube2
+  name: sonarqube2
+spec:
+  type: NodePort  #
+  ports:
+    - name: sonar
+      port: 80
+      #protocol: TCP
+      targetPort: 9000
+      nodePort: 32000  #
+  selector:
+    app: sonarqube2
+ # type: LoadBalancer
