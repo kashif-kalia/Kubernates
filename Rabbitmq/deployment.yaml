@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbtmq
+spec:
+  selector:
+    matchLabels:
+      app: rbtmq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rbtmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.12-management
+          imagePullPolicy: "Always"  # Set to "Always" if you want to ensure the latest image.
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_QUEUE_NAME
+              value: "rabbitmqq"
+            - name: RABBITMQ_DEFAULT_USER
+              value: "admin"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "admin123"
+            - name: RABBITMQ_ROUTING_KEY
+              value: "rbtmqkey"
+          volumeMounts:
+            - mountPath: /var/lib/rabbitmq
+              name: rbtmq
+      volumes:
+        - name: rbtmq
+          persistentVolumeClaim:
+            claimName: rabbitmq-pv-claim
