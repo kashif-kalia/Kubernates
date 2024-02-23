@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbtmq
+  labels:
+    app: rbtmq
+  namespace: dev-svcs
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: rbtmq
+  template:
+    metadata:
+      labels:
+        app: rbtmq
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - main
+      tolerations:
+        - key: "services"
+          operator: "Equal"
+          value: "main"
+          effect: "NoSchedule"
+      serviceAccountName: dev-svcs-sa
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.12-management
+          resources:
+            limits:
+              cpu: 0.2
+              memory: 500Mi
+            requests:
+              cpu: 0.2
+              memory: 500Mi
+          env:
+            - name: env
+              value: dev
+            - name: RABBITMQ_QUEUE_NAME
+              value: "rabbitmqq"
+            - name: RABBITMQ_ROUTING_KEY
+              value: "rbtmqkey"
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secret
+                  key: RABBITMQ_DEFAULT_USER
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secret
+                  key: RABBITMQ_DEFAULT_PASS
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 5672
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5672
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5672
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          volumeMounts:
+            - name: rbtmq-data-dir
+              mountPath: "/data/rbtmq"
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+      volumes:
+        - name: rbtmq-data-dir
+          persistentVolumeClaim:
+            claimName: rbtmq-pvc
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: dev-secret-provider-1
