@@ -1,0 +1,13 @@
+1) If There are multiple Evicted Pods are running On EKS Like Hundred PLUS 
+and we have to delete pods all the evicted pods then with single command 
+we can delete that pods.
+
+:-   kubectl get pods --all-namespaces -o json | jq '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) | "kubectl delete pods \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+
+                                                                  OR
+
+:-  kubectl get pods --all-namespaces --field-selector 'status.phase==Failed' -o json | kubectl delete -f -
+
+2) To delete pods in Failed state in namespace default
+
+:- kubectl -n default delete pods --field-selector=status.phase=Failed
