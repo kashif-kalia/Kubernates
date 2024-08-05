@@ -1,0 +1,7 @@
+                  To create a Docker Image from Dockerfile and Push to ECR Write a dockerfile then
+
+0 :- Firstly create a repository on ECR THEN 
+1 :-  docker build -t nhais321 .
+2 :-  docker tag nhais321 622905996173.dkr.ecr.eu-west-2.amazonaws.com/tif/int/nhais-adapter:nhais321
+3 :-  aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 622905996173.dkr.ecr.eu-west-2.amazonaws.com
+4 :-  docker push 622905996173.dkr.ecr.eu-west-2.amazonaws.com/tif/int/nhais-adapter:nhais321
