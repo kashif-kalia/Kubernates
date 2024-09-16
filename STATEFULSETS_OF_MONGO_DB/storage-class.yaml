@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mongo-efs-storage-class
+  namespace: stg-svcs
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-070a8aecaf849a467
+  directoryPerms: "777"
+  basePath: /mnt/mongo
