@@ -1,0 +1,17 @@
+# not needed in case of dynamic provisioning, only required in static provisioning 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-efs-pv
+  namespace: stg-svcs
+spec:
+  capacity:
+    storage: 150Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: stg-mongo-efs-storage-class
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-070a8aecaf849a467:/mnt/mongo  # efs-system-id:efs-path
