@@ -1,0 +1,106 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/actions.mhb-app-stg-presign-lambda-tg: '{ "Type" : "forward",
+      "TargetGroupArn" : "arn:aws:elasticloadbalancing:ap-south-1:209258198235:targetgroup/mhb-app-stg-presign-lambda-tg/d0baa8e3deec3f9f"
+      }'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:209258198235:certificate/a795214c-d7f6-4551-8a73-81ff56d9fad4,
+      arn:aws:acm:ap-south-1:209258198235:certificate/6fc380c7-4869-4cf9-adde-940bb345943a,
+      arn:aws:acm:ap-south-1:209258198235:certificate/97c692cd-9710-47c9-920c-427d877d5eba
+    alb.ingress.kubernetes.io/group.name: mbh-non-prod-ingress-group
+    alb.ingress.kubernetes.io/ip-address-type: ipv4
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: mhb-app-uat-vpc-eO2nATVp-public-ap-south-1a,
+      mhb-app-uat-vpc-eO2nATVp-public-ap-south-1b
+    alb.ingress.kubernetes.io/target-type: ip
+  creationTimestamp: "2024-10-04T19:25:05Z"
+  finalizers:
+  - group.ingress.k8s.aws/mbh-non-prod-ingress-group
+  generation: 1
+  name: mhb-ingress
+  namespace: stg-svcs
+  resourceVersion: "25799290"
+  uid: 5b3faee5-a233-4731-97df-906fb7c542aa
+spec:
+  ingressClassName: alb
+  rules:
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-auth-svc
+            port:
+              number: 9002
+        path: /api-auth
+        pathType: Prefix
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-core-svc
+            port:
+              number: 9001
+        path: /api-core
+        pathType: Prefix
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-notification-svc
+            port:
+              number: 9090
+        path: /api-notification
+        pathType: Prefix
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-scheduler-svc
+            port:
+              number: 9091
+        path: /api-scheduler
+        pathType: Prefix
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-reporting-svc
+            port:
+              number: 9004
+        path: /api-reporting
+        pathType: Prefix
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: mhb-app-stg-presign-lambda-tg
+            port:
+              name: use-annotation
+        path: /api/presign-url
+        pathType: Exact
+  - host: stg-app.myhealthbuddy.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: stg-reward-svc
+            port:
+              number: 9092
+        path: /api-rewards
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - hostname: k8s-mbhnonprodingress-0d3fdbcceb-525084772.ap-south-1.elb.amazonaws.com
