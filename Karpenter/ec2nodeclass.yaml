@@ -1,0 +1,85 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  annotations:
+    karpenter.k8s.aws/ec2nodeclass-hash: "1912937585902325988"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"karpenter.k8s.aws/v1beta1","kind":"EC2NodeClass","metadata":{"annotations":{},"name":"default"},"spec":{"amiFamily":"AL2","role":"karpenter-mhb-app-uat-eks-eO2nATVp-20240819095627164800000002","securityGroupSelectorTerms":[{"tags":{"karpenter.sh/discovery":"mhb-app-uat-eks-eO2nATVp"}}],"subnetSelectorTerms":[{"tags":{"karpenter.sh/discovery":"mhb-app-uat-eks-eO2nATVp"}}],"tags":{"karpenter.sh/discovery":"mhb-app-uat-eks-eO2nATVp"}}}
+  creationTimestamp: "2024-08-20T14:20:07Z"
+  finalizers:
+  - karpenter.k8s.aws/termination
+  generation: 2
+  name: default
+  resourceVersion: "35531694"
+  uid: 4774e5c0-a4af-4197-bfd0-ad577ef518cf
+spec:
+  amiFamily: AL2
+  metadataOptions:
+    httpEndpoint: enabled
+    httpProtocolIPv6: disabled
+    httpPutResponseHopLimit: 2
+    httpTokens: required
+  role: karpenter-mhb-app-uat-eks-eO2nATVp-20240819095627164800000002
+  securityGroupSelectorTerms:
+  - tags:
+      karpenter.sh/discovery: mhb-app-uat-eks-eO2nATVp
+  subnetSelectorTerms:
+  - tags:
+      karpenter.sh/discovery: mhb-app-uat-eks-eO2nATVp
+  tags:
+    karpenter.sh/discovery: mhb-app-uat-eks-eO2nATVp
+status:
+  amis:
+  - id: ami-06e1f359815569db0
+    name: amazon-eks-arm64-node-1.30-v20241016
+    requirements:
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+      - arm64
+    - key: karpenter.k8s.aws/instance-gpu-count
+      operator: DoesNotExist
+    - key: karpenter.k8s.aws/instance-accelerator-count
+      operator: DoesNotExist
+  - id: ami-0f41bbe1336c3b2b6
+    name: amazon-eks-gpu-node-1.30-v20241016
+    requirements:
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+      - amd64
+    - key: karpenter.k8s.aws/instance-gpu-count
+      operator: Exists
+  - id: ami-0f41bbe1336c3b2b6
+    name: amazon-eks-gpu-node-1.30-v20241016
+    requirements:
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+      - amd64
+    - key: karpenter.k8s.aws/instance-accelerator-count
+      operator: Exists
+  - id: ami-0ed52700827594f01
+    name: amazon-eks-node-1.30-v20241016
+    requirements:
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+      - amd64
+    - key: karpenter.k8s.aws/instance-gpu-count
+      operator: DoesNotExist
+    - key: karpenter.k8s.aws/instance-accelerator-count
+      operator: DoesNotExist
+  instanceProfile: mhb-app-uat-eks-eO2nATVp_6029909036736629111
+  securityGroups:
+  - id: sg-07430bcc60f658f04
+    name: mhb-app-uat-eks-eO2nATVp-node-20240818142431585500000003
+  subnets:
+  - id: subnet-0ab63ebe4bce5a09d
+    zone: ap-south-1b
+  - id: subnet-0d5d3b97b48a91649
+    zone: ap-south-1a
